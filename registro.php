@@ -1,38 +1,42 @@
 <?php
-	session_start();
-	require_once('funciones.php');
-	if(estaLogueado()){
-		header('Location: perfil-usuario.php'); exit;
+	require_once('soporte.php');
+	if ($auth->estaLogueado()){
+		header('Location: index.php'); exit;
 	}
-		if (estaCookiado()) {
+		if ($auth->estaCookiado()) {
 		header('Location: index.php'); exit;
 		}
 
-	$sexos = [
-		'F' => 'Femenino',
-		'M' => 'Masculino',
-		'O'=>'Otro'
-	];
-	$nombre = '';
-	$apellido = '';
-	$email = '';
-	$username = '';
-	$telefono = '';
-	if ($_POST) {
-		$nombre = $_POST['name'];
-		$apellido = $_POST['apellido'];
-		$email = $_POST['email'];
-		$username = $_POST['username'];
-		$telefono = $_POST['telefono'];
-		$erroresFinales = validarUsuario($_POST, $_FILES);
-		if (empty($erroresFinales)) {
-			$erroresFinales = guardarImagen('avatar', $erroresFinales);
-			if (empty($erroresFinales)) {
-				$usuarioAGuardar = crearUsuario($_POST);
-				guardarUsuario($usuarioAGuardar);
-				header('location: index.php'); exit;
-			}
+	$errores = [];
+	if($_POST) {
+		$errores = $validator->validarInformacion($_POST, $db);
+
+		if (!isset($errores ["name"])){
+			$nameDefault = $_POST["name"];
 		}
+
+		if (!isset($errores ["apellido"])){
+			$apellidoDefault = $_POST["apellido"];
+		}
+
+		if (!isset($errores ["email"])){
+			$emailDefault = $_POST["email"];
+		}
+
+		if (!isset($errores ["username"])){
+			$usernameDefault = $_POST["username"];
+		}
+
+		if (count($errores) == 0){
+			$usuario = new Usuario($_POST["name"], $_POST["apellido"], $_POST["email"], $_POST["username"]);
+
+			$usuario->guardarImagen();
+			$usuario = $db->guardarUsuario($usuario);
+			header('location: index.php'); exit;
+		}
+	}
+
+
 	}
 	$tituloDePagina = 'Registro de Usuarios';
 	require_once('includes/head.php');

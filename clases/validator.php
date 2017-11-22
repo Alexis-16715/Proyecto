@@ -3,42 +3,38 @@
 require_once("db.php");
 
 class Validator {
-  public 	function validarLogin($informacion, db $db) {
+  public 	function validarLogin($data, db $db) {
   		$errores = [];
 
-  		foreach ($informacion as $clave => $valor) {
-  			$informacion[$clave] = trim($valor);
+  		foreach ($data as $clave => $valor) {
+  			$data [$clave] = trim($valor);
   		}
 
 
-  		if ($informacion["email"] == "") {
+  		if ($data ["email"] == "") {
   			$errores["email"] = "Che, dejaste el mail incompleto";
   		}
-  		else if (filter_var($informacion["email"], FILTER_VALIDATE_EMAIL) == false) {
+  		else if (filter_var($data ["email"], FILTER_VALIDATE_EMAIL) == false) {
   			$errores["mail"] = "El mail tiene que ser un mail";
-  		} else if ($db->traerPorMail($informacion["email"]) == NULL) {
+  		} else if ($db->traerPorMail($data ["email"]) == NULL) {
   			$errores["mail"] = "El usuario no esta en nuestra base";
   		}
 
-  		$usuario = $db->traerPorMail($informacion["email"]);
+  		$usuario = $db->traerPorMail($data ["email"]);
 
-  		if ($informacion["password"] == "") {
+  		if ($data ["password"] == "") {
   			$errores["password"] = "No llenaste la contraseña";
   		} else if ($usuario != NULL) {
   			//El usuario existe y puso contraseña
   			// Tengo que validar que la contraseño que ingreso sea valida
-  			if (password_verify($informacion["password"], $usuario->getPassword()) == false) {
+  			if (password_verify($data ["password"], $usuario->getPassword()) == false) {
   				$errores["password"] = "La contraseña no verifica";
   			}
   		}
-
-
-
-
   		return $errores;
   	}
 
-    function validarInformacion($informacion, db $db) {
+    function validarInformacion($data, db $db) {
       $errores = [];
 
       $nombre=$_FILES["avatar"]["name"];
@@ -51,43 +47,42 @@ class Validator {
         $errores["avatar"] = "La extension de la foto no es válida";
       }
 
-      foreach ($informacion as $clave => $valor) {
-        $informacion[$clave] = trim($valor);
+      foreach ($data  as $clave => $valor) {
+        $data [$clave] = trim($valor);
       }
-      if ($informacion["name"] == "") {
+      if ($data ["name"] == "") {
         $errores["nombre"] = 'Che escribí el nombre!';
       }
-      if ($informacion["apellido"] == "") {
+      if ($data ["apellido"] == "") {
         $errores["apellido"] = 'Che escribí el apellido!';
       }
 
-      if (strlen($informacion["username"]) <= 3) {
-        $errores["username"] = "Tenes que poner más de 3 caracteres en tu nombre de usuario";
+      if (strlen($data ["username"]) <= 3) {
+        $errores["username"] = "Escribi un nombre de usuario!";
       }
 
-      if ($informacion["email"] == "") {
+      if ($data ["email"] == "") {
         $errores["email"] = "Che, dejaste el mail incompleto";
       }
-      else if (filter_var($informacion["email"], FILTER_VALIDATE_EMAIL) == false) {
+      else if (filter_var($data ["email"], FILTER_VALIDATE_EMAIL) == false) {
         $errores["mail"] = "El mail tiene que ser un mail";
-      } else if ($db->traerPorMail($informacion["email"]) != NULL) {
+      } else if ($db->traerPorMail($data ["email"]) != NULL) {
         $errores["mail"] = "El usuario ya existia!";
       }
 
-      if ($informacion["password"] == "") {
+      if ($data ["password"] == "") {
         $errores["password"] = "No llenaste la contraseña";
       }
 
-      if ($informacion["cpassword"] == "") {
-        $errores["cpassword"] = "No llenaste completar contraseña";
+      if ($data ["repass"] == "") {
+        $errores["repass"] = "No llenaste completar contraseña";
       }
 
-      if ($informacion["password"] != "" && $informacion["cpassword"] != "" && $informacion["password"] != $informacion["cpassword"]) {
+      if ($data ["password"] != "" && $data ["repass"] != "" && $data ["password"] != $data ["repass"]) {
         $errores["password"] = "Las contraseñas no coinciden";
       }
 
-
-      return $errores;
+    return $errores;
     }
 
 }

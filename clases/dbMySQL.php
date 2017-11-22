@@ -69,6 +69,8 @@ class dbMySQL extends db {
     		return $usuario;
 
     	}
+
+
 }
 
 ?>

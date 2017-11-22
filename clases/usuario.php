@@ -1,4 +1,5 @@
 <?php
+require_once("db.php");
 
 class Usuario {
   private $id;
@@ -73,7 +74,7 @@ class Usuario {
     $this->pais = $pais;
   }
 
-  function guardarImagen() {
+  public function guardarImagen() {
 
 		if ($_FILES["avatar"]["error"] == UPLOAD_ERR_OK)
 		{
@@ -90,6 +91,49 @@ class Usuario {
 			move_uploaded_file($archivo, $miArchivo);
 		}
 	}
+
+        function crearUsuario($datos){
+          $usuarioFinal = [
+        //		'id' => generarId(), id autoincremental
+            'name' => $datos['name'],
+            'lastname' => $datos['apellido'],
+            'email' => $datos['email'],
+            'username' => $datos['username'],
+            'password' => password_hash($datos['pass'], PASSWORD_DEFAULT)
+          ];
+          return $usuarioFinal;
+        }
+
+        function comprobarEmail($mail, db $db){
+      		$usuarios = traerTodos();
+      		foreach ($usuarios as $unUsuario) {
+      			if ($unUsuario['email'] == $mail) {
+      				return $unUsuario;
+      			}
+      		}
+      		return false;
+      	}
+
+        function comprobarNick($nick, db $db){
+      		$usuarios = traerTodos();
+      		foreach ($usuarios as $unUsuario) {
+      			if ($unUsuario['username'] == $nick) {
+      				return $unUsuario;
+      			}
+      		}
+      		return false;
+        }
+
+        function traerId($id, db $db){
+      		$usuarios = traerTodos();
+      		foreach ($usuarios as $unUsuario) {
+      			if ($id == $unUsuario['id']) {
+      				return $unUsuario;
+      			}
+      		}
+      		return false;
+      	}
+
 }
 
 ?>

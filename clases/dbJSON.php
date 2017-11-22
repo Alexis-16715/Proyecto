@@ -20,6 +20,16 @@ class dbJSON extends db {
     		return $usuariosFinal;
   }
 
+      function generarId(){
+    		$usuarios = traerTodos();
+    		if (count($usuarios) == 0) {
+    			return 1;
+    		}
+    		$elUltimo = array_pop($usuarios);
+    		$id = $elUltimo['id'];
+    		return $id + 1;
+    	}
+
   public function traerPorMail($email) {
         $usuarios = traerTodos();
       foreach ($usuarios as $unUsuario) {

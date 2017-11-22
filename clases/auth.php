@@ -35,6 +35,19 @@ class Auth {
   public function loguear($email) {
 		$_SESSION["logueado"] = $email;
 	}
+
+  function cookiar($usuario){
+		// Tomar el array PHP
+		$usuarioId = $usuario['id'];
+		$usuarioEmail = $usuario['email'];
+		setcookie("userid", $usuarioId, time() + (86400 * 30), "/"); // 86400 = 1 day
+		setcookie("useremail", $usuarioEmail, time() + (86400 * 30), "/"); // 86400 = 1 day
+	}
+	function estaCookiado() {
+		return isset($_COOKIE["userid"]);
+	}
+
+
 }
 
 ?>

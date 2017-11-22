@@ -1,17 +1,16 @@
 <?php
-	require_once('funciones.php');
-		if (estaCookiado()) {
-			$cookie = $_COOKIE['userid'];
-			loguear(traerId($_COOKIE['userid']));
-		}
-		if (estaLogueado()) {
-		$usuario = traerId($_SESSION['userId']);
-		$laImagen = glob('images/avatares/' . $usuario['email'] . '*');
-	}
-	$tituloDePagina = 'Inicio';
-?>
-<?php
-	require_once('includes/head.php');
+	require_once('soporte.php');
+		$usuarioLogueado = $auth->usuarioLogueado($db);
+
+			if ($usuarioLogueado == null){
+				$nombre = "Invitado";
+			} else {
+				$nombre = $usuarioLogueado->getUsername();
+			}
+
+			$usuario = $db->traerTodos();
+
+			require_once('includes/head.php');
 ?>
  <main>
       <section id="quienessomos">
