@@ -7,7 +7,7 @@ class dbMySQL extends db {
   private $conn;
 
   public function __construct() {
-    $dsn = 'mysql:host=localhost;dbname=long-story;
+    $dsn = 'mysql:host=localhost;dbname=longstory_db;
     charset=utf8mb4;port=3306';
     $user ="root";
     $pass = "root";
